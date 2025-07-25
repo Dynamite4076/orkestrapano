@@ -2,13 +2,277 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
-  <title>Orkestrapano – Sade Not Paneli</title>
+  <title>Orkestrapano v2 – Görev ve Tartışma Paneli</title>
+  <style>
+    body {
+      background: #15171a;
+      color: #f0f0f0;
+      font-family: 'Segoe UI', 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 740px;
+      margin: 32px auto;
+      padding: 24px;
+      background: #23272f;
+      border-radius: 14px;
+      box-shadow: 0 4px 18px #0007;
+    }
+    h1 {
+      text-align: center;
+      margin-top: 0;
+      letter-spacing: 2px;
+      font-weight: 700;
+      font-size: 2.2rem;
+    }
+    .tasks-section, .discuss-section {
+      margin-bottom: 32px;
+    }
+    .tasks-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    #newTaskInput {
+      flex: 1;
+      padding: 8px;
+      font-size: 1rem;
+      border-radius: 6px;
+      border: none;
+      outline: none;
+      background: #1a1d22;
+      color: #fafafa;
+    }
+    #addTaskBtn {
+      margin-left: 12px;
+      padding: 8px 16px;
+      background: #3399ff;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    #addTaskBtn:hover { background: #2374c6; }
+    ul#taskList {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    ul#taskList li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #191c21;
+      padding: 10px 16px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      font-size: 1.1rem;
+    }
+    .task-text.completed {
+      text-decoration: line-through;
+      color: #70ffbd;
+    }
+    .actions button {
+      margin-left: 8px;
+      padding: 3px 10px;
+      background: #343b45;
+      color: #f0f0f0;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: .95em;
+      transition: background .2s;
+    }
+    .actions button:hover { background: #222; }
+    /* Tartışma kutusu */
+    .discuss-section textarea {
+      width: 100%;
+      min-height: 60px;
+      padding: 8px;
+      border-radius: 8px;
+      border: none;
+      background: #1a1d22;
+      color: #fafafa;
+      font-size: 1rem;
+      margin-bottom: 10px;
+      resize: vertical;
+    }
+    .discuss-section button {
+      padding: 8px 18px;
+      background: #8f67ff;
+      color: #fff;
+      border: none;
+      border-radius: 7px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-left: 4px;
+      transition: background .2s;
+    }
+    .discuss-section button:hover { background: #7c4df7; }
+    .discuss-list {
+      margin-top: 18px;
+    }
+    .discuss-item {
+      background: #242838;
+      margin-bottom: 12px;
+      border-radius: 9px;
+      padding: 12px 15px;
+      font-size: 1.05em;
+      color: #e0e0fa;
+      position: relative;
+    }
+    .discuss-item .del-btn {
+      position: absolute;
+      right: 10px; top: 10px;
+      background: #d36c6c;
+      color: #fff;
+      border: none;
+      border-radius: 3px;
+      font-size: .9em;
+      padding: 2px 8px;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    .discuss-item .del-btn:hover { background: #a70000; }
+    @media (max-width: 600px) {
+      .container { padding: 7vw 2vw; }
+      h1 { font-size: 1.25rem; }
+    }
+  </style>
 </head>
 <body>
-  <h2>Orkestrapano</h2>
-  <textarea rows="10" cols="50" placeholder="Buraya notunu yaz..."></textarea>
-  <br><br>
-  <button onclick="alert('Notun kaydedildi (demo)!');">Notu Kaydet</button>
-  <p><i>Bu sadece örnek paneldir, büyütmek için isteğini yazabilirsin.</i></p>
+  <div class="container">
+    <h1>ORKUSTRAPANO v2</h1>
+
+    <!-- Görev Paneli -->
+    <section class="tasks-section">
+      <div class="tasks-header">
+        <span><b>Görevlerim / Projeler</b></span>
+        <input id="newTaskInput" type="text" maxlength="80" placeholder="Yeni görev ekle..." />
+        <button id="addTaskBtn">Ekle</button>
+      </div>
+      <ul id="taskList"></ul>
+    </section>
+
+    <!-- Tartışma & Fikir Paneli -->
+    <section class="discuss-section">
+      <div>
+        <b>Tartışma / Fikir Kutusu</b>
+      </div>
+      <textarea id="discussInput" maxlength="300" placeholder="Sorunu/fikrini yaz ve Ekle ile aşağıya kaydet..."></textarea>
+      <button id="addDiscussBtn">Ekle</button>
+      <div class="discuss-list" id="discussList"></div>
+    </section>
+
+    <footer style="text-align:center;color:#aaa;font-size:.98em;margin-top:30px;">
+      Orkestrapano v2 | Başar için özel geliştirilmiştir.
+    </footer>
+  </div>
+
+  <script>
+    // Görev paneli JS
+    const newTaskInput = document.getElementById('newTaskInput');
+    const addTaskBtn = document.getElementById('addTaskBtn');
+    const taskList = document.getElementById('taskList');
+
+    function saveTasks() {
+      localStorage.setItem('ork_tasks', JSON.stringify(
+        Array.from(taskList.children).map(li => ({
+          text: li.querySelector('.task-text').textContent,
+          completed: li.querySelector('.task-text').classList.contains('completed')
+        }))
+      ));
+    }
+    function loadTasks() {
+      const tasks = JSON.parse(localStorage.getItem('ork_tasks') || '[]');
+      tasks.forEach(t => addTask(t.text, t.completed));
+    }
+    function addTask(text, completed) {
+      const li = document.createElement('li');
+      const span = document.createElement('span');
+      span.className = 'task-text';
+      span.textContent = text;
+      if (completed) span.classList.add('completed');
+      li.appendChild(span);
+
+      const actions = document.createElement('span');
+      actions.className = 'actions';
+
+      const doneBtn = document.createElement('button');
+      doneBtn.textContent = '✓';
+      doneBtn.title = 'Tamamlandı';
+      doneBtn.onclick = () => {
+        span.classList.toggle('completed');
+        saveTasks();
+      };
+      actions.appendChild(doneBtn);
+
+      const delBtn = document.createElement('button');
+      delBtn.textContent = 'Sil';
+      delBtn.title = 'Sil';
+      delBtn.onclick = () => {
+        taskList.removeChild(li);
+        saveTasks();
+      };
+      actions.appendChild(delBtn);
+
+      li.appendChild(actions);
+      taskList.appendChild(li);
+      saveTasks();
+    }
+    addTaskBtn.onclick = () => {
+      const val = newTaskInput.value.trim();
+      if (val) { addTask(val, false); newTaskInput.value = ''; }
+    };
+    newTaskInput.addEventListener('keypress', e => {
+      if (e.key === 'Enter') addTaskBtn.click();
+    });
+    loadTasks();
+
+    // Tartışma kutusu JS
+    const discussInput = document.getElementById('discussInput');
+    const addDiscussBtn = document.getElementById('addDiscussBtn');
+    const discussList = document.getElementById('discussList');
+
+    function saveDiscuss() {
+      localStorage.setItem('ork_discuss', discussList.innerHTML);
+    }
+    function loadDiscuss() {
+      discussList.innerHTML = localStorage.getItem('ork_discuss') || '';
+      // Butonları tekrar çalışır hale getir
+      discussList.querySelectorAll('.del-btn').forEach(btn => {
+        btn.onclick = function() {
+          btn.parentElement.remove();
+          saveDiscuss();
+        };
+      });
+    }
+    addDiscussBtn.onclick = () => {
+      const val = discussInput.value.trim();
+      if (val) {
+        const div = document.createElement('div');
+        div.className = 'discuss-item';
+        div.textContent = val;
+        const delBtn = document.createElement('button');
+        delBtn.textContent = 'Sil';
+        delBtn.className = 'del-btn';
+        delBtn.onclick = function() {
+          div.remove();
+          saveDiscuss();
+        };
+        div.appendChild(delBtn);
+        discussList.appendChild(div);
+        discussInput.value = '';
+        saveDiscuss();
+      }
+    };
+    loadDiscuss();
+  </script>
 </body>
 </html>

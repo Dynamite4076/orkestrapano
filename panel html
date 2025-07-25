@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Orkestrapano – Sade Not Paneli</title>
+</head>
+<body>
+  <h2>Orkestrapano</h2>
+  <textarea rows="10" cols="50" placeholder="Buraya notunu yaz..."></textarea>
+  <br><br>
+  <button onclick="alert('Notun kaydedildi (demo)!');">Notu Kaydet</button>
+  <p><i>Bu sadece örnek paneldir, büyütmek için isteğini yazabilirsin.</i></p>
+</body>
+</html>

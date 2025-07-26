@@ -2,156 +2,111 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
-  <title>Orkestrapano v2 – Görev ve Tartışma Paneli</title>
+  <title>Orkestrapano v3 – Süper Panel</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
+    :root {
+      --bg: #15171a;
+      --container: #23272f;
+      --text: #f0f0f0;
+      --accent: #3399ff;
+      --card: #191c21;
+      --input: #1a1d22;
+      --btn: #3399ff;
+      --success: #70ffbd;
+      --astro: #22254b;
+    }
+    [data-theme="light"] {
+      --bg: #f8fafc;
+      --container: #fff;
+      --text: #222;
+      --accent: #2c56ad;
+      --card: #e8eaf3;
+      --input: #e7ebf1;
+      --btn: #346cd6;
+      --success: #20c659;
+      --astro: #b5c9ed;
+    }
     body {
-      background: #15171a;
-      color: #f0f0f0;
-      font-family: 'Segoe UI', 'Arial', sans-serif;
-      margin: 0;
-      padding: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', Arial, sans-serif;
+      margin: 0; padding: 0;
       min-height: 100vh;
+      transition: background .3s, color .3s;
     }
     .container {
-      max-width: 740px;
-      margin: 32px auto;
-      padding: 24px;
-      background: #23272f;
-      border-radius: 14px;
-      box-shadow: 0 4px 18px #0007;
+      max-width: 820px;
+      margin: 20px auto 35px;
+      padding: 18px 12px 24px;
+      background: var(--container);
+      border-radius: 15px;
+      box-shadow: 0 5px 28px #0004;
     }
-    h1 {
-      text-align: center;
-      margin-top: 0;
-      letter-spacing: 2px;
-      font-weight: 700;
-      font-size: 2.2rem;
+    h1 { text-align: center; margin-top: 2px; font-size: 2.1rem; font-weight: bold; }
+    .modul { background: var(--card); border-radius: 11px; margin: 24px 0; padding: 18px 12px 14px; }
+    .tasks-header, .not-header { display: flex; align-items: center; justify-content: space-between; }
+    #newTaskInput, #quickNoteInput {
+      flex: 1; padding: 8px; font-size: 1rem;
+      border-radius: 6px; border: none; outline: none;
+      background: var(--input); color: var(--text);
+      margin-right: 10px;
     }
-    .tasks-section, .discuss-section {
-      margin-bottom: 32px;
-    }
-    .tasks-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 14px;
-    }
-    #newTaskInput {
-      flex: 1;
-      padding: 8px;
-      font-size: 1rem;
-      border-radius: 6px;
-      border: none;
-      outline: none;
-      background: #1a1d22;
-      color: #fafafa;
-    }
-    #addTaskBtn {
-      margin-left: 12px;
-      padding: 8px 16px;
-      background: #3399ff;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background .2s;
-    }
-    #addTaskBtn:hover { background: #2374c6; }
-    ul#taskList {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
+    #addTaskBtn, #saveNoteBtn { background: var(--btn); color: #fff; border: none; border-radius: 6px; padding: 7px 16px; font-weight: 600; cursor: pointer; transition: background .18s;}
+    #addTaskBtn:hover, #saveNoteBtn:hover { background: var(--accent);}
+    ul#taskList { list-style: none; padding: 0; margin: 10px 0 0;}
     ul#taskList li {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: #191c21;
-      padding: 10px 16px;
-      border-radius: 8px;
-      margin-bottom: 8px;
-      font-size: 1.1rem;
+      display: flex; align-items: center; justify-content: space-between;
+      background: var(--input); padding: 10px 16px; border-radius: 8px; margin-bottom: 7px; font-size: 1.09rem;
     }
-    .task-text.completed {
-      text-decoration: line-through;
-      color: #70ffbd;
-    }
-    .actions button {
-      margin-left: 8px;
-      padding: 3px 10px;
-      background: #343b45;
-      color: #f0f0f0;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: .95em;
-      transition: background .2s;
-    }
+    .task-text.completed { text-decoration: line-through; color: var(--success);}
+    .actions button { margin-left: 8px; padding: 3px 10px; background: #343b45; color: #f0f0f0; border: none; border-radius: 4px; cursor: pointer; font-size: .95em; transition: background .2s;}
     .actions button:hover { background: #222; }
     /* Tartışma kutusu */
-    .discuss-section textarea {
-      width: 100%;
-      min-height: 60px;
-      padding: 8px;
-      border-radius: 8px;
-      border: none;
-      background: #1a1d22;
-      color: #fafafa;
-      font-size: 1rem;
-      margin-bottom: 10px;
-      resize: vertical;
-    }
-    .discuss-section button {
-      padding: 8px 18px;
-      background: #8f67ff;
-      color: #fff;
-      border: none;
-      border-radius: 7px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      margin-left: 4px;
-      transition: background .2s;
-    }
+    .discuss-section textarea { width: 100%; min-height: 54px; padding: 7px; border-radius: 8px; border: none; background: var(--input); color: var(--text); font-size: 1rem; margin-bottom: 7px; resize: vertical;}
+    .discuss-section button { padding: 7px 18px; background: #8f67ff; color: #fff; border: none; border-radius: 7px; font-size: 1rem; font-weight: 600; cursor: pointer; margin-left: 4px; transition: background .2s;}
     .discuss-section button:hover { background: #7c4df7; }
-    .discuss-list {
-      margin-top: 18px;
-    }
+    .discuss-list { margin-top: 13px;}
     .discuss-item {
-      background: #242838;
-      margin-bottom: 12px;
-      border-radius: 9px;
-      padding: 12px 15px;
-      font-size: 1.05em;
-      color: #e0e0fa;
-      position: relative;
+      background: #242838; margin-bottom: 9px; border-radius: 9px;
+      padding: 12px 15px; font-size: 1.04em; color: #e0e0fa; position: relative;
     }
-    .discuss-item .del-btn {
-      position: absolute;
-      right: 10px; top: 10px;
-      background: #d36c6c;
-      color: #fff;
-      border: none;
-      border-radius: 3px;
-      font-size: .9em;
-      padding: 2px 8px;
-      cursor: pointer;
-      transition: background .2s;
-    }
+    .discuss-item .del-btn { position: absolute; right: 10px; top: 10px; background: #d36c6c; color: #fff; border: none; border-radius: 3px; font-size: .93em; padding: 2px 8px; cursor: pointer; transition: background .2s;}
     .discuss-item .del-btn:hover { background: #a70000; }
-    @media (max-width: 600px) {
-      .container { padding: 7vw 2vw; }
-      h1 { font-size: 1.25rem; }
+    /* Takvim */
+    .calendar-section { display: flex; flex-direction: column; align-items: center;}
+    .calendar-label { font-weight: bold; margin-bottom: 8px;}
+    #calendar { padding: 8px; font-size: 1.06em; border-radius: 8px; border: 1.5px solid var(--accent); background: var(--input); color: var(--text);}
+    .agenda-list { margin: 13px 0 0; width: 99%;}
+    .agenda-item { background: #2d3140; border-radius: 7px; margin-bottom: 8px; padding: 8px 13px; color: #aad8ff; position: relative;}
+    .agenda-item .del-agenda-btn { position: absolute; right: 8px; top: 8px; background: #e87373; color: #fff; border: none; border-radius: 3px; font-size: .93em; padding: 1px 8px; cursor: pointer; transition: background .2s;}
+    .agenda-item .del-agenda-btn:hover { background: #c10000;}
+    /* Hızlı Not */
+    .not-section { margin-bottom: 14px;}
+    #quickNoteInput { min-width: 0; max-width: 400px;}
+    #quickNoteDisplay { margin-top: 9px; background: #40476d; color: #fff; border-radius: 7px; padding: 8px 12px; min-height: 32px;}
+    /* Tema butonu */
+    .theme-btn { position: absolute; top: 19px; right: 30px; background: var(--btn); color: #fff; border: none; border-radius: 16px; padding: 6px 18px; font-size: 1em; cursor: pointer; transition: background .22s;}
+    .theme-btn:hover { background: var(--accent);}
+    /* AstroMini */
+    .astro-section { background: var(--astro); color: #fff; border-radius: 10px; padding: 13px 17px; margin-top: 8px;}
+    .astro-title { font-weight: 700; letter-spacing: 1px; }
+    .astro-row { margin-top: 5px;}
+    @media (max-width: 700px) {
+      .container { padding: 2vw 2vw; }
+      .modul { padding: 12px 4vw; }
+      h1 { font-size: 1.2rem; }
+      .theme-btn { right: 7vw; }
     }
   </style>
 </head>
 <body>
+  <button class="theme-btn" id="themeBtn">Açık/Koyu</button>
   <div class="container">
-    <h1>ORKUSTRAPANO v2</h1>
+    <h1>ORKUSTRAPANO v3</h1>
 
     <!-- Görev Paneli -->
-    <section class="tasks-section">
+    <section class="modul tasks-section">
       <div class="tasks-header">
         <span><b>Görevlerim / Projeler</b></span>
         <input id="newTaskInput" type="text" maxlength="80" placeholder="Yeni görev ekle..." />
@@ -161,7 +116,7 @@
     </section>
 
     <!-- Tartışma & Fikir Paneli -->
-    <section class="discuss-section">
+    <section class="modul discuss-section">
       <div>
         <b>Tartışma / Fikir Kutusu</b>
       </div>
@@ -170,17 +125,57 @@
       <div class="discuss-list" id="discussList"></div>
     </section>
 
-    <footer style="text-align:center;color:#aaa;font-size:.98em;margin-top:30px;">
-      Orkestrapano v2 | Başar için özel geliştirilmiştir.
+    <!-- Takvim/Ajanda -->
+    <section class="modul calendar-section">
+      <div class="calendar-label">Takvim / Ajanda</div>
+      <input type="date" id="calendar" />
+      <div style="margin-top:8px;display:flex;">
+        <input type="text" id="agendaInput" placeholder="Bu güne not/görev ekle..." maxlength="100" style="flex:1;max-width:340px;"/>
+        <button id="addAgendaBtn" style="margin-left:9px;">Ekle</button>
+      </div>
+      <div class="agenda-list" id="agendaList"></div>
+    </section>
+
+    <!-- Hızlı Not Alanı -->
+    <section class="modul not-section">
+      <div class="not-header">
+        <span><b>Hızlı Not</b></span>
+        <input id="quickNoteInput" type="text" maxlength="90" placeholder="Kısa hatırlatma..." />
+        <button id="saveNoteBtn">Kaydet</button>
+      </div>
+      <div id="quickNoteDisplay"></div>
+    </section>
+
+    <!-- AstroMini (Bugün Burç/Ay Fazı/Motivasyon) -->
+    <section class="modul astro-section" id="astroSection">
+      <div class="astro-title">AstroMini & Bugün Enerjisi</div>
+      <div class="astro-row" id="astroBurc"></div>
+      <div class="astro-row" id="astroAy"></div>
+      <div class="astro-row" id="astroMot"></div>
+    </section>
+
+    <footer style="text-align:center;color:#aaa;font-size:.99em;margin-top:30px;">
+      Orkestrapano v3 | Başar için özel geliştirilmiştir. | © 2025
     </footer>
   </div>
-
   <script>
-    // Görev paneli JS
+    // Tema değişimi
+    const themeBtn = document.getElementById('themeBtn');
+    const theme = localStorage.getItem('ork_theme') || 'dark';
+    document.body.setAttribute('data-theme', theme);
+    themeBtn.textContent = theme === 'dark' ? 'Açık' : 'Koyu';
+    themeBtn.onclick = () => {
+      const now = document.body.getAttribute('data-theme');
+      const next = now === 'dark' ? 'light' : 'dark';
+      document.body.setAttribute('data-theme', next);
+      localStorage.setItem('ork_theme', next);
+      themeBtn.textContent = next === 'dark' ? 'Açık' : 'Koyu';
+    };
+
+    // Görev paneli
     const newTaskInput = document.getElementById('newTaskInput');
     const addTaskBtn = document.getElementById('addTaskBtn');
     const taskList = document.getElementById('taskList');
-
     function saveTasks() {
       localStorage.setItem('ork_tasks', JSON.stringify(
         Array.from(taskList.children).map(li => ({
@@ -235,17 +230,15 @@
     });
     loadTasks();
 
-    // Tartışma kutusu JS
+    // Tartışma kutusu
     const discussInput = document.getElementById('discussInput');
     const addDiscussBtn = document.getElementById('addDiscussBtn');
     const discussList = document.getElementById('discussList');
-
     function saveDiscuss() {
       localStorage.setItem('ork_discuss', discussList.innerHTML);
     }
     function loadDiscuss() {
       discussList.innerHTML = localStorage.getItem('ork_discuss') || '';
-      // Butonları tekrar çalışır hale getir
       discussList.querySelectorAll('.del-btn').forEach(btn => {
         btn.onclick = function() {
           btn.parentElement.remove();
@@ -273,6 +266,103 @@
       }
     };
     loadDiscuss();
+
+    // Hızlı Not
+    const quickNoteInput = document.getElementById('quickNoteInput');
+    const saveNoteBtn = document.getElementById('saveNoteBtn');
+    const quickNoteDisplay = document.getElementById('quickNoteDisplay');
+    function saveQuickNote() {
+      localStorage.setItem('ork_quicknote', quickNoteInput.value);
+      quickNoteDisplay.textContent = quickNoteInput.value || 'Henüz not yok';
+    }
+    function loadQuickNote() {
+      const note = localStorage.getItem('ork_quicknote') || '';
+      quickNoteInput.value = note;
+      quickNoteDisplay.textContent = note || 'Henüz not yok';
+    }
+    saveNoteBtn.onclick = saveQuickNote;
+    loadQuickNote();
+
+    // Takvim & Ajanda
+    const calendar = document.getElementById('calendar');
+    const agendaInput = document.getElementById('agendaInput');
+    const addAgendaBtn = document.getElementById('addAgendaBtn');
+    const agendaList = document.getElementById('agendaList');
+    function todayStr() {
+      const d = new Date();
+      return d.toISOString().split('T')[0];
+    }
+    calendar.value = todayStr();
+    function saveAgenda() {
+      const allAgenda = JSON.parse(localStorage.getItem('ork_agenda') || '{}');
+      allAgenda[calendar.value] = Array.from(agendaList.children).map(li => li.querySelector('.agenda-text').textContent);
+      localStorage.setItem('ork_agenda', JSON.stringify(allAgenda));
+    }
+    function loadAgenda() {
+      const allAgenda = JSON.parse(localStorage.getItem('ork_agenda') || '{}');
+      agendaList.innerHTML = '';
+      (allAgenda[calendar.value] || []).forEach(text => addAgendaItem(text));
+    }
+    function addAgendaItem(text) {
+      const div = document.createElement('div');
+      div.className = 'agenda-item';
+      const span = document.createElement('span');
+      span.className = 'agenda-text';
+      span.textContent = text;
+      div.appendChild(span);
+
+      const delBtn = document.createElement('button');
+      delBtn.textContent = 'Sil';
+      delBtn.className = 'del-agenda-btn';
+      delBtn.onclick = function() {
+        div.remove();
+        saveAgenda();
+      };
+      div.appendChild(delBtn);
+
+      agendaList.appendChild(div);
+      saveAgenda();
+    }
+    addAgendaBtn.onclick = () => {
+      const val = agendaInput.value.trim();
+      if (val) { addAgendaItem(val); agendaInput.value = ''; }
+    };
+    agendaInput.addEventListener('keypress', e => {
+      if (e.key === 'Enter') addAgendaBtn.click();
+    });
+    calendar.addEventListener('change', loadAgenda);
+    loadAgenda();
+
+    // AstroMini
+    function astroBurcGoster() {
+      // Hızlı: Sadece Güneş burcuna göre (ör: Koç–Balık arası)
+      const aylar = ["Oğlak", "Kova", "Balık", "Koç", "Boğa", "İkizler", "Yengeç", "Aslan", "Başak", "Terazi", "Akrep", "Yay"];
+      const gunler = [20, 19, 21, 21, 21, 23, 23, 23, 23, 23, 22, 22];
+      const now = new Date();
+      let ay = now.getMonth(), gun = now.getDate();
+      let burc = aylar[ay];
+      if (gun < gunler[ay]) burc = aylar[(ay + 11) % 12];
+      document.getElementById('astroBurc').textContent = `Burcun: ${burc}`;
+      // Ay fazı (kabaca)
+      const ayEvresi = ["Yeni Ay", "Hilal", "İlkdördün", "Şişkin Ay", "Dolunay", "Şişkin Ay", "Son Dördün", "Hilal"];
+      const startDate = new Date("2024-01-11T11:57:00Z"); // referans yeni ay
+      const diff = (now - startDate) / (1000 * 3600 * 24);
+      const ayIndex = Math.floor(((diff % 29.53) / 29.53) * 8);
+      document.getElementById('astroAy').textContent = `Ay Fazı: ${ayEvresi[Math.abs(ayIndex)]}`;
+      // Günlük motivasyon
+      const motivasyonlar = [
+        "Bugün başlangıçlar için harika bir gün!",
+        "Detaylara dikkat, başarı seninle.",
+        "Pozitif enerji etrafına yayılıyor.",
+        "Cesur adımlar için doğru zaman.",
+        "Sevgi ve şefkat ön planda.",
+        "Zihnin açık, fırsatlar önünde.",
+        "Kendine vakit ayır, şarj ol!"
+      ];
+      const mot = motivasyonlar[now.getDay() % motivasyonlar.length];
+      document.getElementById('astroMot').textContent = `Günün Enerjisi: ${mot}`;
+    }
+    astroBurcGoster();
   </script>
 </body>
 </html>
